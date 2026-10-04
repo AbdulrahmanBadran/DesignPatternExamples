@@ -1,0 +1,207 @@
+using System;
+
+
+
+public interface IFlyBehavior
+{
+    void Fly();
+}
+
+public class FlyWithWings : IFlyBehavior
+{
+    public void Fly()
+    {
+        Console.WriteLine("I am flying with wings.");
+    }
+}
+
+public class FlyNoWay : IFlyBehavior
+{
+    public void Fly()
+    {
+        Console.WriteLine("I cannot fly.");
+    }
+}
+
+public class FlyRocketPowered : IFlyBehavior
+{
+    public void Fly()
+    {
+        Console.WriteLine("I am flying with a rocket!");
+    }
+}
+
+
+
+
+
+
+public interface IQuackBehavior
+{
+    void Quack();
+}
+
+public class NormalQuack : IQuackBehavior
+{
+    public void Quack()
+    {
+        Console.WriteLine("Quack!");
+    }
+}
+
+public class Squeak : IQuackBehavior
+{
+    public void Quack()
+    {
+        Console.WriteLine("Squeak!");
+    }
+}
+
+public class MuteQuack : IQuackBehavior
+{
+    public void Quack()
+    {
+        Console.WriteLine("<< Silence >>");
+    }
+}
+
+
+
+
+
+
+public abstract class Duck
+{
+    protected IFlyBehavior flyBehavior;
+    protected IQuackBehavior quackBehavior;
+
+    public void PerformFly()
+    {
+        flyBehavior.Fly();
+    }
+
+    public void PerformQuack()
+    {
+        quackBehavior.Quack();
+    }
+
+    public void Swim()
+    {
+        Console.WriteLine("All ducks can swim.");
+    }
+
+    public void SetFlyBehavior(IFlyBehavior behavior)
+    {
+        flyBehavior = behavior;
+    }
+
+    public void SetQuackBehavior(IQuackBehavior behavior)
+    {
+        quackBehavior = behavior;
+    }
+
+    public abstract void Display();
+}
+
+
+
+
+
+
+public class MallardDuck : Duck
+{
+    public MallardDuck()
+    {
+        flyBehavior = new FlyWithWings();
+        quackBehavior = new NormalQuack();
+    }
+
+    public override void Display()
+    {
+        Console.WriteLine("I am a Mallard Duck.");
+    }
+}
+
+public class RedHeadDuck : Duck
+{
+    public RedHeadDuck()
+    {
+        flyBehavior = new FlyWithWings();
+        quackBehavior = new NormalQuack();
+    }
+
+    public override void Display()
+    {
+        Console.WriteLine("I am a Red Head Duck.");
+    }
+}
+
+public class RubberDuck : Duck
+{
+    public RubberDuck()
+    {
+        flyBehavior = new FlyNoWay();
+        quackBehavior = new Squeak();
+    }
+
+    public override void Display()
+    {
+        Console.WriteLine("I am a Rubber Duck.");
+    }
+}
+
+public class ModelDuck : Duck
+{
+    public ModelDuck()
+    {
+        flyBehavior = new FlyNoWay();
+        quackBehavior = new NormalQuack();
+    }
+
+    public override void Display()
+    {
+        Console.WriteLine("I am a Model Duck.");
+    }
+}
+
+
+
+
+
+
+public class Program
+{
+    public static void Main()
+    {
+        Duck mallard = new MallardDuck();
+
+        mallard.Display();
+        mallard.PerformFly();
+        mallard.PerformQuack();
+        mallard.Swim();
+
+        Console.WriteLine("----------------");
+
+        Duck rubberDuck = new RubberDuck();
+
+        rubberDuck.Display();
+        rubberDuck.PerformFly();
+        rubberDuck.PerformQuack();
+
+        Console.WriteLine("----------------");
+
+        Duck modelDuck = new ModelDuck();
+
+        modelDuck.Display();
+
+        // Initially cannot fly
+        modelDuck.PerformFly();
+
+        // Change behavior at runtime
+        modelDuck.SetFlyBehavior(new FlyRocketPowered());
+
+        // Now it can fly with a rocket
+        modelDuck.PerformFly();
+    }
+}
+
