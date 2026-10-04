@@ -1,0 +1,161 @@
+public interface IObserver
+{
+    void Update(float temperature, float humidity, float pressure);
+}
+
+public interface ISubject
+{
+    void RegisterObserver(IObserver observer);
+    void RemoveObserver(IObserver observer);
+    void NotifyObservers();
+}
+
+
+
+public class WeatherData : ISubject
+{
+    private List<IObserver> observers;
+
+    private float temperature;
+    private float humidity;
+    private float pressure;
+
+    public WeatherData()
+    {
+        observers = new List<IObserver>();
+    }
+
+    public void RegisterObserver(IObserver observer)
+    {
+        observers.Add(observer);
+    }
+
+    public void RemoveObserver(IObserver observer)
+    {
+        observers.Remove(observer);
+    }
+
+    public void NotifyObservers()
+    {
+        foreach (IObserver observer in observers)
+        {
+            observer.Update(temperature, humidity, pressure);
+        }
+    }
+
+    public void MeasurementsChanged()
+    {
+        NotifyObservers();
+    }
+
+    public void SetMeasurements(
+        float temperature,
+        float humidity,
+        float pressure)
+    {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+
+        MeasurementsChanged();
+    }
+}
+
+public class CurrentConditionsDisplay : IObserver
+{
+    public void Update(
+        float temperature,
+        float humidity,
+        float pressure)
+    {
+        Console.WriteLine("Current Conditions:");
+
+        Console.WriteLine(
+            $"Temperature: {temperature}");
+
+        Console.WriteLine(
+            $"Humidity: {humidity}");
+
+        Console.WriteLine(
+            $"Pressure: {pressure}");
+
+        Console.WriteLine();
+    }
+}
+
+public class StatisticsDisplay : IObserver
+{
+    public void Update(
+        float temperature,
+        float humidity,
+        float pressure)
+    {
+        Console.WriteLine("Statistics Display:");
+
+        Console.WriteLine(
+            $"Received temperature: {temperature}");
+
+        Console.WriteLine();
+    }
+}
+
+public class ForecastDisplay : IObserver
+{
+    public void Update(
+        float temperature,
+        float humidity,
+        float pressure)
+    {
+        Console.WriteLine("Forecast Display:");
+
+        if (pressure > 1010)
+        {
+            Console.WriteLine("Weather looks good.");
+        }
+        else
+        {
+            Console.WriteLine("Possible bad weather.");
+        }
+
+        Console.WriteLine();
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        WeatherData weatherData = new WeatherData();
+
+        CurrentConditionsDisplay currentDisplay =
+            new CurrentConditionsDisplay();
+
+        StatisticsDisplay statisticsDisplay =
+            new StatisticsDisplay();
+
+        ForecastDisplay forecastDisplay =
+            new ForecastDisplay();
+
+        weatherData.RegisterObserver(currentDisplay);
+        weatherData.RegisterObserver(statisticsDisplay);
+        weatherData.RegisterObserver(forecastDisplay);
+
+        Console.WriteLine("First Weather Update");
+        Console.WriteLine("--------------------");
+
+        weatherData.SetMeasurements(
+            25,
+            60,
+            1013
+        );
+
+        Console.WriteLine("Second Weather Update");
+        Console.WriteLine("---------------------");
+
+        weatherData.SetMeasurements(
+            30,
+            55,
+            1005
+        );
+    }
+}
