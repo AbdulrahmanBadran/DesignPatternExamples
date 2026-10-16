@@ -1,0 +1,152 @@
+using System;
+
+public class Beverage
+{
+    protected string description = "Unknown Beverage";
+
+    private bool milk;
+    private bool soy;
+    private bool mocha;
+    private bool whip;
+
+    private double milkCost = 0.10;
+    private double soyCost = 0.15;
+    private double mochaCost = 0.20;
+    private double whipCost = 0.10;
+
+    public string GetDescription()
+    {
+        return description;
+    }
+
+    public void SetMilk(bool value)
+    {
+        milk = value;
+    }
+
+    public void SetSoy(bool value)
+    {
+        soy = value;
+    }
+
+    public void SetMocha(bool value)
+    {
+        mocha = value;
+    }
+
+    public void SetWhip(bool value)
+    {
+        whip = value;
+    }
+
+    public bool HasMilk()
+    {
+        return milk;
+    }
+
+    public bool HasSoy()
+    {
+        return soy;
+    }
+
+    public bool HasMocha()
+    {
+        return mocha;
+    }
+
+    public bool HasWhip()
+    {
+        return whip;
+    }
+
+    public virtual double Cost()
+    {
+        double condimentCost = 0.0;
+
+        if (HasMilk())
+            condimentCost += milkCost;
+
+        if (HasSoy())
+            condimentCost += soyCost;
+
+        if (HasMocha())
+            condimentCost += mochaCost;
+
+        if (HasWhip())
+            condimentCost += whipCost;
+
+        return condimentCost;
+    }
+}
+
+
+public class DarkRoast : Beverage
+{
+    public DarkRoast()
+    {
+        description = "Dark Roast Coffee";
+    }
+
+    public override double Cost()
+    {
+        return 0.99 + base.Cost();
+    }
+}
+
+
+public class Espresso : Beverage
+{
+    public Espresso()
+    {
+        description = "Espresso";
+    }
+
+    public override double Cost()
+    {
+        return 1.99 + base.Cost();
+    }
+}
+
+
+public class HouseBlend : Beverage
+{
+    public HouseBlend()
+    {
+        description = "House Blend Coffee";
+    }
+
+    public override double Cost()
+    {
+        return 0.89 + base.Cost();
+    }
+}
+
+
+public class Decaf : Beverage
+{
+    public Decaf()
+    {
+        description = "Decaf Coffee";
+    }
+
+    public override double Cost()
+    {
+        return 1.05 + base.Cost();
+    }
+}
+
+
+
+public class Program
+{
+    public static void Main()
+    {
+        DarkRoast coffee = new DarkRoast();
+
+        coffee.SetMilk(true);
+        coffee.SetMocha(true);
+
+        Console.WriteLine(coffee.GetDescription());
+        Console.WriteLine(coffee.Cost());
+    }
+}
