@@ -1,0 +1,232 @@
+using System;
+
+#region Abstract Component
+
+public abstract class Beverage
+{
+    protected string description = "Unknown Beverage";
+
+    public virtual string GetDescription()
+    {
+        return description;
+    }
+
+    public abstract double Cost();
+}
+
+#endregion
+
+
+#region Concrete Components
+
+public class Espresso : Beverage
+{
+    public Espresso()
+    {
+        description = "Espresso";
+    }
+
+    public override double Cost()
+    {
+        return 1.99;
+    }
+}
+
+public class HouseBlend : Beverage
+{
+    public HouseBlend()
+    {
+        description = "House Blend Coffee";
+    }
+
+    public override double Cost()
+    {
+        return 0.89;
+    }
+}
+
+public class DarkRoast : Beverage
+{
+    public DarkRoast()
+    {
+        description = "Dark Roast Coffee";
+    }
+
+    public override double Cost()
+    {
+        return 0.99;
+    }
+}
+
+public class Decaf : Beverage
+{
+    public Decaf()
+    {
+        description = "Decaf Coffee";
+    }
+
+    public override double Cost()
+    {
+        return 1.05;
+    }
+}
+
+#endregion
+
+
+#region Abstract Decorator
+
+public abstract class CondimentDecorator : Beverage
+{
+    public abstract override string GetDescription();
+}
+
+#endregion
+
+
+#region Concrete Decorators
+
+public class Mocha : CondimentDecorator
+{
+    private Beverage beverage;
+
+    public Mocha(Beverage beverage)
+    {
+        this.beverage = beverage;
+    }
+
+    public override string GetDescription()
+    {
+        return beverage.GetDescription() + ", Mocha";
+    }
+
+    public override double Cost()
+    {
+        return 0.20 + beverage.Cost();
+    }
+}
+
+
+public class Milk : CondimentDecorator
+{
+    private Beverage beverage;
+
+    public Milk(Beverage beverage)
+    {
+        this.beverage = beverage;
+    }
+
+    public override string GetDescription()
+    {
+        return beverage.GetDescription() + ", Milk";
+    }
+
+    public override double Cost()
+    {
+        return 0.10 + beverage.Cost();
+    }
+}
+
+
+public class Soy : CondimentDecorator
+{
+    private Beverage beverage;
+
+    public Soy(Beverage beverage)
+    {
+        this.beverage = beverage;
+    }
+
+    public override string GetDescription()
+    {
+        return beverage.GetDescription() + ", Soy";
+    }
+
+    public override double Cost()
+    {
+        return 0.15 + beverage.Cost();
+    }
+}
+
+
+public class Whip : CondimentDecorator
+{
+    private Beverage beverage;
+
+    public Whip(Beverage beverage)
+    {
+        this.beverage = beverage;
+    }
+
+    public override string GetDescription()
+    {
+        return beverage.GetDescription() + ", Whip";
+    }
+
+    public override double Cost()
+    {
+        return 0.10 + beverage.Cost();
+    }
+}
+
+#endregion
+
+
+#region Main Program
+
+public class Program
+{
+    public static void Main()
+    {
+        // Example 1:
+        // Espresso without any condiment
+
+        Beverage beverage1 = new Espresso();
+
+        Console.WriteLine(
+            beverage1.GetDescription()
+            + " $" +
+            beverage1.Cost()
+        );
+
+
+        Console.WriteLine("-----------------------");
+
+
+        // Example 2:
+        // DarkRoast with double Mocha and Whip
+
+        Beverage beverage2 = new DarkRoast();
+
+        beverage2 = new Mocha(beverage2);
+        beverage2 = new Mocha(beverage2);
+        beverage2 = new Whip(beverage2);
+
+        Console.WriteLine(
+            beverage2.GetDescription()
+            + " $" +
+            beverage2.Cost()
+        );
+
+
+        Console.WriteLine("-----------------------");
+
+
+        // Example 3:
+        // HouseBlend with Soy, Mocha and Whip
+
+        Beverage beverage3 = new HouseBlend();
+
+        beverage3 = new Soy(beverage3);
+        beverage3 = new Mocha(beverage3);
+        beverage3 = new Whip(beverage3);
+
+        Console.WriteLine(
+            beverage3.GetDescription()
+            + " $" +
+            beverage3.Cost()
+        );
+    }
+}
+
+#endregion
