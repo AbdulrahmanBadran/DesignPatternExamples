@@ -1,0 +1,150 @@
+using System;
+
+#region Product
+
+public abstract class Pizza
+{
+    protected string name;
+
+    public virtual void Prepare()
+    {
+        Console.WriteLine($"Preparing {name}");
+    }
+
+    public virtual void Bake()
+    {
+        Console.WriteLine("Baking pizza");
+    }
+
+    public virtual void Cut()
+    {
+        Console.WriteLine("Cutting pizza");
+    }
+
+    public virtual void Box()
+    {
+        Console.WriteLine("Boxing pizza");
+    }
+
+    public string GetName()
+    {
+        return name;
+    }
+}
+
+#endregion
+
+
+#region Concrete Products
+
+public class CheesePizza : Pizza
+{
+    public CheesePizza()
+    {
+        name = "Cheese Pizza";
+    }
+}
+
+public class GreekPizza : Pizza
+{
+    public GreekPizza()
+    {
+        name = "Greek Pizza";
+    }
+}
+
+public class PepperoniPizza : Pizza
+{
+    public PepperoniPizza()
+    {
+        name = "Pepperoni Pizza";
+    }
+}
+
+#endregion
+
+
+#region Simple Factory
+
+public class SimplePizzaFactory
+{
+    public Pizza CreatePizza(string type)
+    {
+        Pizza pizza = null;
+
+        if (type == "cheese")
+        {
+            pizza = new CheesePizza();
+        }
+        else if (type == "greek")
+        {
+            pizza = new GreekPizza();
+        }
+        else if (type == "pepperoni")
+        {
+            pizza = new PepperoniPizza();
+        }
+
+        return pizza;
+    }
+}
+
+#endregion
+
+
+#region Client
+
+public class PizzaStore
+{
+    private SimplePizzaFactory factory;
+
+    public PizzaStore(SimplePizzaFactory factory)
+    {
+        this.factory = factory;
+    }
+
+    public Pizza OrderPizza(string type)
+    {
+        Pizza pizza = factory.CreatePizza(type);
+
+        if (pizza == null)
+        {
+            Console.WriteLine("Invalid pizza type.");
+            return null;
+        }
+
+        pizza.Prepare();
+        pizza.Bake();
+        pizza.Cut();
+        pizza.Box();
+
+        return pizza;
+    }
+}
+
+#endregion
+
+
+#region Main
+
+public class Program
+{
+    public static void Main()
+    {
+        SimplePizzaFactory factory =
+            new SimplePizzaFactory();
+
+        PizzaStore store =
+            new PizzaStore(factory);
+
+        Pizza pizza1 =
+            store.OrderPizza("cheese");
+
+        Console.WriteLine();
+
+        Pizza pizza2 =
+            store.OrderPizza("pepperoni");
+    }
+}
+
+#endregion
